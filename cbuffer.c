@@ -9,16 +9,16 @@ void cb_init(cbuffer_t *cb, void *buf, uint32_t size)
     }
     cb->data = (uint8_t *)buf;
     cb->size = size;    
-    cb->writer = 0;
-    cb->reader = 0;
+    cb->writer   = 0;
+    cb->reader   = 0;
     cb->overflow = 0;
-    cd->active = true;
+    cd->active   = true;
 }
 
 void cb_clear(cbuffer_t *cb) 
 {
-    cb ->writer = 0;
-    cb ->reader = 0;
+    cb ->writer   = 0;
+    cb ->reader   = 0;
     cb ->overflow = 0;
 }
 
@@ -32,8 +32,18 @@ uint32_t cb_read(cbuffer_t *cb, void *buf, uint32_t nbytes)
     uint8_t read_count = 0 ; 
     while
     {
-        if(cb_data_count)
+        if(cb_data_count < nbytes)
+        {
+            if(cb_data_count(cb) == 0) 
+            {
+                break;
+            }
+        }
+        test[read_count] =cb->data[cb-reader];
+        cb->reader = (cb->reader + 1) % cb->size;
+        read_count++;       
     }
+    return read_count;
 }
 
 uint32_t cb_write(cbuffer_t *cb, void *buf, uint32_t nbytes) 
